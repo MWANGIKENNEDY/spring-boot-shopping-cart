@@ -17,7 +17,6 @@ import com.kensftwr.shopping_cart.models.Product;
 import com.kensftwr.shopping_cart.repository.ImageRepository;
 import com.kensftwr.shopping_cart.service.product.ProductService;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -88,7 +87,7 @@ public class ImageFile implements IImageService {
             image.setImage(new SerialBlob(file.getBytes()));
            imageRepository.save(image); 
         } catch (IOException | SQLException e) {
-            throw new RuntimeException(e.getMessage())
+            throw new RuntimeException(e.getMessage());
         }
 
     }
