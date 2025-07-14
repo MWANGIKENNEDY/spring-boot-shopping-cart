@@ -10,9 +10,9 @@ public interface IProductService {
 
     ProductResponse addProduct(ProductRequest productRequest);
 
-    List<Product> getAllProducts();
+    List<ProductResponse> getAllProducts();
 
-    Product getProductById(Long id);
+    ProductResponse getProductById(Long id);
 
     void deleteProductById(Long id);
 

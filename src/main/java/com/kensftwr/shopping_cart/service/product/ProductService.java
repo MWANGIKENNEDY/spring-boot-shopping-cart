@@ -1,6 +1,9 @@
 package com.kensftwr.shopping_cart.service.product;
 
 import java.util.List;
+
+import com.kensftwr.shopping_cart.dtos.CategoryResponse;
+import com.kensftwr.shopping_cart.dtos.ImageResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,13 +72,39 @@ public class ProductService implements IProductService {
     // }
 
     @Override
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<ProductResponse> getAllProducts() {
+        return productRepository.findAll().stream().map(product -> {
+            ProductResponse dto = new ProductResponse();
+            dto.setName(product.getName());
+            dto.setDescription(product.getDescription());
+            dto.setPrice(product.getPrice());
+            dto.setInventory(product.getInventory());
+            dto.setBrand(product.getBrand());
+
+            // ✅ set category (id + name)
+            CategoryResponse categoryDTO = new CategoryResponse();
+            categoryDTO.setId(product.getCategory().getId());
+            categoryDTO.setName(product.getCategory().getName());
+            dto.setCategory(categoryDTO);
+
+            // ✅ map images
+            List<ImageResponse> imageResponses = product.getImages().stream().map(image -> {
+                ImageResponse imageDTO = new ImageResponse();
+                imageDTO.setImageId(image.getId());
+                imageDTO.setImageName(image.getFilename());
+                imageDTO.setDownloadUrl(image.getDownloadUrl());
+                return imageDTO;
+            }).toList();
+
+            dto.setImages(imageResponses);
+
+            return dto;
+        }).toList();
     }
 
-    @Override
-    public Product getProductById(Long id) {
-        return productRepository.findById(id)
+        @Override
+    public ProductResponse getProductById(Long id) {
+        return productRepository.findById(id).map(e -> modelMapper.map(e,ProductResponse.class))
                 .orElseThrow(() -> new ProductNotFoundException("Product not found"));
     }
 

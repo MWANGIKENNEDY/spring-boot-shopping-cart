@@ -51,7 +51,7 @@ public class CategoryController {
         }
     }
 
-    @GetMapping("/categories/{categoryId}")
+    @GetMapping("/categories/category/{categoryId}")
     public ResponseEntity<ApiResponse> getCategoryById(@PathVariable Long categoryId) {
         try {
             Category category = categoryServiceI.getCategoryById(categoryId);
@@ -62,7 +62,7 @@ public class CategoryController {
         }
     }
 
-    @GetMapping("/categories/category/{categoryName}")
+    @GetMapping("/categories/category/cat-by-name/{categoryName}")
     public ResponseEntity<ApiResponse> getCategoryByName(@PathVariable String categoryName) {
         try {
             Category category = categoryServiceI.getCategoryByName(categoryName);
@@ -73,7 +73,7 @@ public class CategoryController {
         }
     }
 
-    @GetMapping("/categories/{categoryId}")
+    @GetMapping("/categories/delete/{categoryId}")
     public ResponseEntity<ApiResponse> deleteCategoryById(@PathVariable Long categoryId) {
         try {
             categoryServiceI.deleteCategoryById(categoryId);

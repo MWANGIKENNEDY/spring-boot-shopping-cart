@@ -1,6 +1,7 @@
 package com.kensftwr.shopping_cart.dtos;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import com.kensftwr.shopping_cart.models.Category;
 
@@ -27,6 +28,8 @@ public class ProductResponse {
     @NotEmpty
     private String brand;
     @NotEmpty
-    private Category category;
+    private CategoryResponse category;
+
+    private List<ImageResponse> images;
 
 }

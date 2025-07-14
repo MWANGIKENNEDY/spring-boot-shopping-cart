@@ -32,23 +32,25 @@ public class ProductController {
 
     private final IProductService iProductService;
 
+
+
     @GetMapping("/all")
     public ResponseEntity<ApiResponse> getAllProducts() {
-        List<Product> products = iProductService.getAllProducts();
+        List<ProductResponse> products = iProductService.getAllProducts();
         return ResponseEntity.ok(new ApiResponse("success", products));
     }
 
     @GetMapping("/product/{id}")
     public ResponseEntity<ApiResponse> getProductById(@PathVariable Long id) {
         try {
-            Product product = iProductService.getProductById(id);
+            ProductResponse product = iProductService.getProductById(id);
             return ResponseEntity.ok(new ApiResponse("success", product));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse("error", null));
         }
     }
 
-    @PostMapping("/product/add")
+    @PostMapping("/products/add")
     public ResponseEntity<ApiResponse> addProduct(@RequestBody ProductRequest productRequest) {
         try {
             ProductResponse product = iProductService.addProduct(productRequest);
@@ -79,7 +81,7 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/products/by-brand-and-name")
+    @GetMapping("/products/by-brand/and-name")
     public ResponseEntity<ApiResponse> getProductByBrandAndName(@RequestParam String brandName,
             @RequestParam String productName) {
 
@@ -96,7 +98,7 @@ public class ProductController {
 
     }
 
-    @GetMapping("/products/by-category-and-brand")
+    @GetMapping("/products/by-category/and-brand")
     public ResponseEntity<ApiResponse> getProductByCategoryAndBrand(@RequestParam String productCategory,
             @RequestParam String productBrand) {
         try {
@@ -112,7 +114,7 @@ public class ProductController {
 
     }
 
-    @GetMapping("/products/by-category-and-brand")
+    @GetMapping("/products/by-name")
     public ResponseEntity<ApiResponse> getProductName(@RequestParam String productName) {
         try {
             List<Product> products = iProductService.getProductsByName(productName);
@@ -126,7 +128,7 @@ public class ProductController {
 
     }
 
-    @GetMapping("/products/by-category-and-brand")
+    @GetMapping("/products/by-brand")
     public ResponseEntity<ApiResponse> getProductByBrand(@RequestParam String brandName) {
         try {
             List<Product> products = iProductService.getProductsByBrand(brandName);

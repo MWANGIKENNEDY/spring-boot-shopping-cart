@@ -7,6 +7,9 @@ import java.util.List;
 
 import javax.sql.rowset.serial.SerialBlob;
 
+import com.kensftwr.shopping_cart.dtos.ProductResponse;
+import com.kensftwr.shopping_cart.exceptions.ProductNotFoundException;
+import com.kensftwr.shopping_cart.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,6 +28,7 @@ public class ImageFile implements IImageService {
 
     private final ImageRepository imageRepository;
     private final ProductService productService;
+    private final ProductRepository productRepository;
 
     @Override
     public Image getImageById(Long id) {
@@ -42,7 +46,9 @@ public class ImageFile implements IImageService {
     @Override
     public List<ImageResponse> saveImages(List<MultipartFile> files, Long productId) {
 
-        Product product = productService.getProductById(productId);
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException("Product not found"));
+
         List<ImageResponse> imageResponse = new ArrayList<>();
 
         for (MultipartFile file : files) {
