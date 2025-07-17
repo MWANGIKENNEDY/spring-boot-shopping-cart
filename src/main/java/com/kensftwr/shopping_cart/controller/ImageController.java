@@ -9,11 +9,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kensftwr.shopping_cart.dtos.ApiResponse;
@@ -24,10 +21,7 @@ import com.kensftwr.shopping_cart.service.image.IImageService;
 
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequestMapping("${api.prefix}/images")
@@ -37,7 +31,7 @@ public class ImageController {
     private final IImageService imageService;
 
     @PostMapping("/upload")
-    public ResponseEntity<ApiResponse> saveImages(@RequestParam List<MultipartFile> files,
+    public ResponseEntity<ApiResponse> saveImages(@RequestBody List<MultipartFile> files,
             @RequestParam Long productId) {
         try {
             List<ImageResponse> imageResponse = imageService.saveImages(files, productId);
@@ -56,10 +50,11 @@ public class ImageController {
     // Or it defaults to a 500 Internal Server Error
 
     @GetMapping("/image/download/{imageId}")
+    @Transactional
     public ResponseEntity<Resource> downloadImage(@PathVariable Long imageId) throws SQLException {
         Image image = imageService.getImageById(imageId);
-        ByteArrayResource resource = new ByteArrayResource(
-                image.getImage().getBytes(1, (int) image.getImage().length()));
+        // Use the BLOB data directly, as it was loaded in the service
+        ByteArrayResource resource = new ByteArrayResource(image.getImage().getBytes(1, (int) image.getImage().length()));
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(image.getFileType()))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + image.getFilename() + "\"")
