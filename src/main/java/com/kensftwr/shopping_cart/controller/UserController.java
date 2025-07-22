@@ -2,6 +2,7 @@ package com.kensftwr.shopping_cart.controller;
 
 import com.kensftwr.shopping_cart.dtos.ApiResponse;
 import com.kensftwr.shopping_cart.dtos.UserCreateRequest;
+import com.kensftwr.shopping_cart.dtos.UserDto;
 import com.kensftwr.shopping_cart.dtos.UserUpdateRequest;
 import com.kensftwr.shopping_cart.exceptions.ResourceNotFoundException;
 import com.kensftwr.shopping_cart.models.Order;
@@ -23,7 +24,8 @@ public class UserController {
     public ResponseEntity<ApiResponse> getUserById(@PathVariable Long userId){
         try{
             User user = userService.getUserById(userId);
-            return ResponseEntity.ok(new ApiResponse("Success!",user));
+            UserDto userDto = userService.convertUserDto(user);
+            return ResponseEntity.ok(new ApiResponse("Success!",userDto));
         }catch(ResourceNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse("Error fetching a single user!",e.getMessage()));
         }
@@ -33,7 +35,8 @@ public class UserController {
     public ResponseEntity<ApiResponse> createUser(@RequestBody UserCreateRequest userCreateRequest){
         try{
             User user = userService.createUser(userCreateRequest);
-            return ResponseEntity.ok(new ApiResponse("Success!",user));
+            UserDto userDto = userService.convertUserDto(user);
+            return ResponseEntity.ok(new ApiResponse("Success!",userDto));
         }catch(ResourceNotFoundException e){
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponse(e.getMessage(),null));
         }
@@ -45,7 +48,8 @@ public class UserController {
                                                   @PathVariable Long userId){
         try{
             User user = userService.updateUser(userUpdateRequest,userId);
-            return ResponseEntity.ok(new ApiResponse("Success!",user));
+            UserDto userDto = userService.convertUserDto(user);
+            return ResponseEntity.ok(new ApiResponse("Success!",userDto));
         }catch(ResourceNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(),null));
         }
