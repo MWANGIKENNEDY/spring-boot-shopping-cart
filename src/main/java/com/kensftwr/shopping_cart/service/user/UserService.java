@@ -9,6 +9,7 @@ import com.kensftwr.shopping_cart.models.User;
 import com.kensftwr.shopping_cart.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -19,6 +20,7 @@ public class UserService implements IUserService{
 
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Override
     public User getUserById(Long userId) {
@@ -32,7 +34,8 @@ public class UserService implements IUserService{
                 .map(req -> {
                     User user  = new User();
                     user.setEmail(userCreateRequest.getEmail());
-                    user.setPassword(userCreateRequest.getPassword());
+                    //encrypt password before saving it to DB
+                    user.setPassword(passwordEncoder.encode(userCreateRequest.getPassword()));
                     user.setFirstName(userCreateRequest.getFirstName());
                     user.setLastName(userCreateRequest.getLastName());
                     return userRepository.save(user);
