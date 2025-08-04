@@ -2,6 +2,9 @@ package com.kensftwr.shopping_cart.security;
 
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.ServletException;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,11 +18,13 @@ import jakarta.servlet.FilterChain;
 
 import java.io.IOException;
 
+@RequiredArgsConstructor
 public class AuthTokenFilter extends OncePerRequestFilter {
 
-    private JwtUtil jwtUtil;
-    private MyUserDetailsService userDetailsService;
 
+    private final  JwtUtil jwtUtil;
+
+    private final MyUserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,

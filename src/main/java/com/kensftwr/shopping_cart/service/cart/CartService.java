@@ -2,12 +2,14 @@ package com.kensftwr.shopping_cart.service.cart;
 
 import com.kensftwr.shopping_cart.exceptions.ProductNotFoundException;
 import com.kensftwr.shopping_cart.models.Cart;
+import com.kensftwr.shopping_cart.models.User;
 import com.kensftwr.shopping_cart.repository.CartItemRepository;
 import com.kensftwr.shopping_cart.repository.CartRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -38,6 +40,17 @@ public class CartService implements ICartService{
         Cart cart = getCart(id);
         return cart.getTotalAmount();
     }
+
+    @Override
+    public Cart initializeNewCart(User user) {
+        return Optional.ofNullable(getCartByUserId(user.getId()))
+                .orElseGet(() -> {
+                    Cart cart = new Cart();
+                    cart.setUser(user);
+                    return cartRepository.save(cart);
+                });
+    }
+
 
     @Override
     public Cart getCartByUserId(Long userId) {

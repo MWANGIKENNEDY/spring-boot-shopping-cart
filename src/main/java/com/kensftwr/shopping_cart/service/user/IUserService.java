@@ -16,4 +16,6 @@ public interface IUserService {
 
     //expose this method to service level
     UserDto convertUserDto(User user);
+
+    User getAuthenticatedUser();
 }

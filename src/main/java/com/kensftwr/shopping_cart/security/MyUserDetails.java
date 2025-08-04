@@ -1,9 +1,10 @@
 package com.kensftwr.shopping_cart.security;
 
+import com.kensftwr.shopping_cart.models.User;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
+
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;

@@ -32,8 +32,6 @@ public class ProductController {
 
     private final IProductService iProductService;
 
-
-
     @GetMapping("/all")
     public ResponseEntity<ApiResponse> getAllProducts() {
         List<ProductResponse> products = iProductService.getAllProducts();
@@ -84,7 +82,6 @@ public class ProductController {
     @GetMapping("/products/by-brand/and-name")
     public ResponseEntity<ApiResponse> getProductByBrandAndName(@RequestParam String brandName,
             @RequestParam String productName) {
-
         try {
             List<Product> products = iProductService.getProductsByBrandAndName(brandName, productName);
 

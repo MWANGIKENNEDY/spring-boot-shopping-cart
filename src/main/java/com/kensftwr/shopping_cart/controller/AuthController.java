@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping
+@RequestMapping("${api.prefix}/auth")
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;

@@ -14,14 +14,20 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @EnableWebSecurity
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
 
+    private static final List<String> SECURED_URLS =
+            List.of("/api/v1/carts/**", "/api/v1/cartItems/**");
+
     private final MyUserDetailsService userDetailsService;
     private final JwtAuthEntryPoint jwtAuthEntryPoint;
+    private final JwtUtil jwtUtil;
 
     // Password encoder bean
     @Bean
@@ -32,7 +38,7 @@ public class SecurityConfig {
     // JWT Auth Token Filter bean
     @Bean
     public AuthTokenFilter authTokenFilter() {
-        return new AuthTokenFilter();
+        return new AuthTokenFilter( jwtUtil,userDetailsService); // Pass required dependencies
     }
 
 
@@ -59,8 +65,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthEntryPoint))
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").authenticated() // allow public auth routes
+                .authorizeHttpRequests(auth ->auth.requestMatchers(SECURED_URLS.toArray(String[]::new)).authenticated() // allow public auth routes
                         .anyRequest().permitAll() // protect everything else
                 )
                 .addFilterBefore(authTokenFilter(), UsernamePasswordAuthenticationFilter.class)
